@@ -202,8 +202,9 @@
     }
 
     .brand img {
-      width: 136px;
+      width: 178px;
       height: auto;
+      filter: drop-shadow(0 10px 24px rgba(216, 173, 61, 0.18));
       mix-blend-mode: screen;
     }
 
@@ -332,235 +333,9 @@
     .hero-visual {
       position: relative;
       display: grid;
-      aspect-ratio: 0.86;
+      min-height: 590px;
+      aspect-ratio: auto;
       place-items: center;
-    }
-
-    .orbit,
-    .orbit::before,
-    .orbit::after {
-      position: absolute;
-      border: 1px solid rgba(216, 173, 61, 0.22);
-      border-radius: 50%;
-    }
-
-    .orbit {
-      inset: 2% -8%;
-      animation: rotate 34s linear infinite;
-    }
-
-    .orbit::before {
-      inset: 11%;
-      content: "";
-    }
-
-    .orbit::after {
-      inset: 23%;
-      content: "";
-    }
-
-    .node {
-      position: absolute;
-      z-index: 3;
-      width: 12px;
-      height: 12px;
-      border: 3px solid var(--black);
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 24px rgba(216, 173, 61, 0.8);
-    }
-
-    .node-1 { top: 4%; left: 50%; }
-    .node-2 { top: 34%; right: -8%; }
-    .node-3 { bottom: 8%; left: 8%; }
-
-    .network-stage {
-      position: relative;
-      z-index: 2;
-      width: min(430px, 92%);
-      aspect-ratio: 0.92;
-      overflow: hidden;
-      border: 1px solid rgba(216, 173, 61, 0.3);
-      border-radius: var(--radius-lg);
-      background:
-        radial-gradient(circle at 50% 52%, rgba(216, 173, 61, 0.14), transparent 31%),
-        linear-gradient(145deg, rgba(25, 23, 17, 0.98), rgba(5, 5, 5, 0.98));
-      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.48), inset 0 0 60px rgba(216, 173, 61, 0.035);
-      backdrop-filter: blur(14px);
-    }
-
-    .network-stage::before {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(216, 173, 61, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(216, 173, 61, 0.045) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: radial-gradient(circle at center, black, transparent 78%);
-      content: "";
-    }
-
-    .network-stage::after {
-      position: absolute;
-      top: -90px;
-      right: -80px;
-      width: 210px;
-      height: 210px;
-      border: 1px solid rgba(216, 173, 61, 0.14);
-      border-radius: 50%;
-      box-shadow: 0 0 0 34px rgba(216, 173, 61, 0.025);
-      content: "";
-    }
-
-    .network-head {
-      position: absolute;
-      z-index: 4;
-      top: 28px;
-      right: 28px;
-      left: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #8c877d;
-      font-size: 0.62rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .network-head span:last-child {
-      color: var(--gold);
-    }
-
-    .network-lines {
-      position: absolute;
-      z-index: 1;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .network-lines path {
-      fill: none;
-      stroke: rgba(216, 173, 61, 0.46);
-      stroke-dasharray: 4 6;
-      stroke-width: 1.2;
-    }
-
-    .network-lines circle {
-      fill: var(--gold);
-      filter: drop-shadow(0 0 5px rgba(216, 173, 61, 0.8));
-    }
-
-    .network-core {
-      position: absolute;
-      z-index: 3;
-      top: 52%;
-      left: 50%;
-      display: grid;
-      width: 164px;
-      height: 164px;
-      place-items: center;
-      border: 1px solid rgba(242, 215, 127, 0.55);
-      border-radius: 50%;
-      background: radial-gradient(circle at 34% 28%, #f4d978, #b67c0b 58%, #3f2a04 100%);
-      color: var(--black);
-      box-shadow: 0 0 0 10px rgba(216, 173, 61, 0.055), 0 20px 55px rgba(0, 0, 0, 0.55), 0 0 48px rgba(216, 173, 61, 0.22);
-      text-align: center;
-      transform: translate(-50%, -50%);
-    }
-
-    .network-core::before,
-    .network-core::after {
-      position: absolute;
-      border: 1px solid rgba(216, 173, 61, 0.18);
-      border-radius: 50%;
-      content: "";
-    }
-
-    .network-core::before { inset: -34px; }
-    .network-core::after { inset: -64px; }
-
-    .network-core div {
-      position: relative;
-      z-index: 1;
-    }
-
-    .network-core strong {
-      display: block;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 4.3rem;
-      font-weight: 500;
-      letter-spacing: -0.1em;
-      line-height: 0.8;
-      transform: translateX(-0.04em);
-    }
-
-    .network-core small {
-      display: block;
-      margin-top: 13px;
-      font-size: 0.62rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .network-card {
-      position: absolute;
-      z-index: 4;
-      display: flex;
-      width: 152px;
-      min-height: 50px;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 13px;
-      border: 1px solid rgba(216, 173, 61, 0.24);
-      border-radius: 14px;
-      background: rgba(8, 8, 8, 0.9);
-      color: #e9e4da;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      font-size: 0.72rem;
-      font-weight: 750;
-      letter-spacing: 0.02em;
-    }
-
-    .network-card i {
-      display: grid;
-      flex: 0 0 auto;
-      width: 25px;
-      height: 25px;
-      place-items: center;
-      border-radius: 50%;
-      background: rgba(216, 173, 61, 0.14);
-      color: var(--gold);
-      font-size: 0.58rem;
-      font-style: normal;
-    }
-
-    .network-card-one { top: 20%; left: 6%; }
-    .network-card-two { top: 37%; right: 5%; }
-    .network-card-three { bottom: 17%; left: 8%; }
-
-    .network-locations {
-      position: absolute;
-      z-index: 4;
-      right: 28px;
-      bottom: 24px;
-      left: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 13px;
-      color: #8f8a80;
-      font-size: 0.6rem;
-      font-weight: 850;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .network-locations b {
-      color: var(--gold);
-      font-size: 0.9rem;
     }
 
     .audience {
@@ -602,6 +377,319 @@
       margin-left: 24px;
       color: var(--mustard);
       content: "•";
+    }
+
+    .connection-frame {
+      position: relative;
+      width: 100%;
+      min-height: 590px;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid rgba(216, 173, 61, 0.32);
+      border-radius: 180px 32px 32px 32px;
+      background: #17140f;
+      box-shadow: 0 42px 110px rgba(0, 0, 0, 0.55), 0 0 0 10px rgba(216, 173, 61, 0.035);
+      isolation: isolate;
+    }
+
+    .connection-frame::before {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(4, 4, 4, 0.05) 24%, rgba(4, 4, 4, 0.88) 100%);
+      content: "";
+    }
+
+    .connection-frame::after {
+      position: absolute;
+      z-index: 1;
+      top: 22px;
+      right: 22px;
+      bottom: 22px;
+      left: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 158px 20px 20px 20px;
+      content: "";
+      pointer-events: none;
+    }
+
+    .connection-frame > img {
+      width: 100%;
+      height: 100%;
+      min-height: 590px;
+      object-fit: cover;
+      object-position: 56% center;
+      filter: saturate(0.82) contrast(1.05);
+      transform: scale(1.015);
+    }
+
+    .connection-badge {
+      position: absolute;
+      z-index: 2;
+      top: 42px;
+      left: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid rgba(242, 215, 127, 0.32);
+      border-radius: 999px;
+      background: rgba(8, 8, 8, 0.74);
+      color: var(--gold-light);
+      backdrop-filter: blur(10px);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .connection-badge::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 5px rgba(216, 173, 61, 0.15);
+      content: "";
+    }
+
+    .connection-caption {
+      position: absolute;
+      z-index: 2;
+      right: 42px;
+      bottom: 38px;
+      left: 42px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .connection-caption strong {
+      max-width: 330px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.55rem, 2.4vw, 2.15rem);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+    }
+
+    .connection-caption span {
+      color: #bbb5aa;
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .connection-stat {
+      position: absolute;
+      z-index: 3;
+      right: -28px;
+      top: 50%;
+      display: grid;
+      width: 126px;
+      min-height: 126px;
+      place-content: center;
+      border: 1px solid rgba(216, 173, 61, 0.42);
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--black);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      text-align: center;
+      transform: translateY(-50%);
+    }
+
+    .connection-stat strong {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.25rem;
+      font-weight: 500;
+      line-height: 0.9;
+    }
+
+    .connection-stat span {
+      max-width: 78px;
+      margin: 8px auto 0;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .partners {
+      padding: 44px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0d0d0c;
+      color: var(--white);
+    }
+
+    .partners-row {
+      display: grid;
+      align-items: center;
+      gap: 48px;
+      grid-template-columns: minmax(180px, 0.58fr) minmax(0, 1.42fr);
+    }
+
+    .partners-copy p {
+      margin: 0;
+      color: var(--gold-light);
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .partners-copy strong {
+      display: block;
+      max-width: 260px;
+      margin-top: 9px;
+      color: #d5d0c7;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .partner-logos {
+      display: grid;
+      align-items: stretch;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .partner-logo {
+      display: grid;
+      min-height: 104px;
+      place-items: center;
+      padding: 24px 30px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .partner-logo + .partner-logo {
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .partner-logo img {
+      width: auto;
+      max-width: 160px;
+      max-height: 45px;
+      object-fit: contain;
+      filter: saturate(0.9);
+      transition: filter 180ms ease, transform 180ms ease;
+    }
+
+    .partner-logo:hover img {
+      filter: saturate(1.1) brightness(1.08);
+      transform: scale(1.035);
+    }
+
+    .partner-logo:nth-child(2) {
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .membership {
+      background:
+        radial-gradient(circle at 14% 20%, rgba(216, 173, 61, 0.12), transparent 25%),
+        linear-gradient(145deg, #0b0b0a, #15130e);
+      color: var(--white);
+    }
+
+    .membership-grid {
+      display: grid;
+      align-items: center;
+      gap: 76px;
+      grid-template-columns: minmax(420px, 1.1fr) minmax(320px, 0.9fr);
+    }
+
+    .card-shot {
+      position: relative;
+      min-height: 520px;
+    }
+
+    .card-shot::before {
+      position: absolute;
+      top: 3%;
+      right: 7%;
+      width: 68%;
+      height: 86%;
+      border: 1px solid rgba(216, 173, 61, 0.22);
+      border-radius: 50%;
+      box-shadow: 0 0 0 48px rgba(216, 173, 61, 0.025), 0 0 0 96px rgba(216, 173, 61, 0.015);
+      content: "";
+    }
+
+    .card-shot img {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(216, 173, 61, 0.2);
+      border-radius: 30px;
+      object-fit: cover;
+      box-shadow: 0 38px 90px rgba(0, 0, 0, 0.48);
+    }
+
+    .card-shot-label {
+      position: absolute;
+      z-index: 2;
+      right: -22px;
+      bottom: 34px;
+      max-width: 210px;
+      padding: 20px 22px;
+      border: 1px solid rgba(216, 173, 61, 0.38);
+      border-radius: 18px;
+      background: rgba(9, 9, 9, 0.9);
+      color: #d9d4cb;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(12px);
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+
+    .card-shot-label b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--gold-light);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .membership-copy .section-label {
+      color: var(--gold-light);
+    }
+
+    .membership-copy .section-intro {
+      color: #bfb9ae;
+    }
+
+    .membership-points {
+      display: grid;
+      margin: 34px 0 38px;
+      gap: 14px;
+    }
+
+    .membership-point {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #e5e0d7;
+      font-size: 0.9rem;
+    }
+
+    .membership-point::before {
+      display: grid;
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      place-items: center;
+      border: 1px solid rgba(216, 173, 61, 0.35);
+      border-radius: 50%;
+      color: var(--gold);
+      content: "✓";
+      font-size: 0.72rem;
+      font-weight: 900;
     }
 
     .benefits {
@@ -809,6 +897,171 @@
       line-height: 1.35;
     }
 
+    .coverage {
+      background: var(--cream);
+    }
+
+    .coverage::after {
+      position: absolute;
+      right: -180px;
+      bottom: -260px;
+      width: 620px;
+      height: 620px;
+      border: 1px solid rgba(185, 135, 24, 0.12);
+      border-radius: 50%;
+      box-shadow: 0 0 0 74px rgba(185, 135, 24, 0.025), 0 0 0 148px rgba(185, 135, 24, 0.018);
+      content: "";
+    }
+
+    .coverage-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-items: center;
+      gap: 72px;
+      grid-template-columns: minmax(310px, 0.78fr) minmax(480px, 1.22fr);
+    }
+
+    .coverage-copy .section-title {
+      max-width: 560px;
+    }
+
+    .coverage-areas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 32px;
+    }
+
+    .coverage-areas span {
+      padding: 10px 14px;
+      border: 1px solid rgba(23, 22, 18, 0.11);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.52);
+      color: #575248;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.045em;
+    }
+
+    .map-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 540px;
+      border: 1px solid rgba(216, 173, 61, 0.3);
+      border-radius: var(--radius-lg);
+      background: #11100d;
+      box-shadow: var(--shadow);
+      color: var(--white);
+      isolation: isolate;
+    }
+
+    .map-card::before {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(7, 7, 6, 0.68) 0%, rgba(7, 7, 6, 0.04) 33%, rgba(7, 7, 6, 0.04) 48%, rgba(7, 7, 6, 0.9) 100%),
+        linear-gradient(90deg, rgba(8, 8, 7, 0.34), transparent 55%);
+      content: "";
+    }
+
+    .map-card::after {
+      position: absolute;
+      z-index: 2;
+      inset: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 23px;
+      content: "";
+      pointer-events: none;
+    }
+
+    .map-card > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(0.78) contrast(1.05) brightness(0.82);
+      transform: scale(1.015);
+    }
+
+    .map-head {
+      position: absolute;
+      z-index: 3;
+      top: 26px;
+      right: 28px;
+      left: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.61rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .map-head span:last-child {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--gold-light);
+    }
+
+    .map-head span:last-child::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 5px rgba(216, 173, 61, 0.13);
+      content: "";
+    }
+
+    .neighborhood-caption {
+      position: absolute;
+      z-index: 3;
+      bottom: 38px;
+      left: 38px;
+      max-width: 420px;
+    }
+
+    .neighborhood-caption span {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--gold-light);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .neighborhood-caption strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.6rem, 2.7vw, 2.35rem);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .photo-credit {
+      position: absolute;
+      z-index: 3;
+      right: 28px;
+      bottom: 22px;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.55rem;
+      letter-spacing: 0.045em;
+      transition: color 180ms ease;
+    }
+
+    .photo-credit:hover {
+      color: var(--gold-light);
+    }
+
     .offer {
       background: var(--white);
     }
@@ -999,8 +1252,43 @@
     }
 
     .footer-brand img {
-      width: 86px;
+      width: 126px;
+      filter: drop-shadow(0 8px 20px rgba(216, 173, 61, 0.15));
       mix-blend-mode: screen;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      z-index: 40;
+      right: 24px;
+      bottom: 24px;
+      display: inline-flex;
+      min-height: 58px;
+      align-items: center;
+      gap: 11px;
+      padding: 0 20px 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      background: #1fa855;
+      color: var(--white);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34), 0 0 0 7px rgba(31, 168, 85, 0.1);
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+      transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .whatsapp-float:hover {
+      background: #24bc61;
+      box-shadow: 0 22px 58px rgba(0, 0, 0, 0.4), 0 0 0 9px rgba(31, 168, 85, 0.12);
+      transform: translateY(-3px);
+    }
+
+    .whatsapp-float svg {
+      width: 29px;
+      height: 29px;
+      fill: currentColor;
     }
 
     .footer-brand p {
@@ -1158,10 +1446,6 @@
       transition: opacity 650ms ease, transform 650ms ease;
     }
 
-    @keyframes rotate {
-      to { transform: rotate(360deg); }
-    }
-
     @media (max-width: 980px) {
       .section {
         padding: 92px 0;
@@ -1173,7 +1457,9 @@
       }
 
       .hero-grid,
-      .offer-grid {
+      .offer-grid,
+      .membership-grid,
+      .coverage-grid {
         gap: 54px;
         grid-template-columns: 1fr;
       }
@@ -1185,15 +1471,38 @@
       .hero-visual {
         width: min(600px, 100%);
         margin: -10px auto 0;
-        aspect-ratio: 1.2;
+        min-height: 580px;
+        aspect-ratio: auto;
       }
 
-      .orbit {
-        inset: -15% 0;
+      .connection-frame,
+      .connection-frame > img {
+        min-height: 580px;
       }
 
-      .network-stage {
-        width: min(430px, 78%);
+      .partners-row {
+        gap: 28px;
+        grid-template-columns: 1fr;
+      }
+
+      .partners-copy strong {
+        max-width: 520px;
+      }
+
+      .membership-copy {
+        max-width: 720px;
+      }
+
+      .card-shot {
+        width: min(720px, 100%);
+      }
+
+      .coverage-copy {
+        max-width: 720px;
+      }
+
+      .map-card {
+        min-height: 560px;
       }
 
       .benefits-head,
@@ -1237,7 +1546,7 @@
       }
 
       .brand img {
-        width: 104px;
+        width: 136px;
       }
 
       .nav-cta {
@@ -1283,51 +1592,56 @@
       }
 
       .hero-visual {
-        aspect-ratio: 1;
+        min-height: 450px;
+        aspect-ratio: auto;
       }
 
-      .network-stage {
-        width: 92%;
-        border-radius: 20px;
+      .connection-frame,
+      .connection-frame > img {
+        min-height: 450px;
       }
 
-      .network-head {
-        top: 20px;
-        right: 20px;
-        left: 20px;
-        font-size: 0.54rem;
+      .connection-frame {
+        border-radius: 110px 24px 24px 24px;
       }
 
-      .network-core {
-        width: 132px;
-        height: 132px;
+      .connection-frame::after {
+        top: 14px;
+        right: 14px;
+        bottom: 14px;
+        left: 14px;
+        border-radius: 96px 14px 14px 14px;
       }
 
-      .network-core strong {
-        font-size: 3.5rem;
+      .connection-badge {
+        top: 28px;
+        left: 28px;
       }
 
-      .network-card {
-        width: 126px;
-        min-height: 44px;
-        padding: 8px 9px;
-        font-size: 0.62rem;
+      .connection-caption {
+        right: 28px;
+        bottom: 26px;
+        left: 28px;
       }
 
-      .network-card i {
-        width: 22px;
-        height: 22px;
+      .connection-caption strong {
+        font-size: 1.45rem;
       }
 
-      .network-card-one { top: 19%; left: 4%; }
-      .network-card-two { top: 39%; right: 3%; }
-      .network-card-three { bottom: 16%; left: 5%; }
+      .connection-stat {
+        right: -8px;
+        top: 47%;
+        width: 98px;
+        min-height: 98px;
+      }
 
-      .network-locations {
-        right: 16px;
-        bottom: 17px;
-        left: 16px;
-        font-size: 0.52rem;
+      .connection-stat strong {
+        font-size: 1.7rem;
+      }
+
+      .connection-stat span {
+        max-width: 64px;
+        font-size: 0.49rem;
       }
 
       .audience-row {
@@ -1344,6 +1658,83 @@
 
       .audience-list span:not(:last-child)::after {
         margin-left: 12px;
+      }
+
+      .partners {
+        padding: 36px 0;
+      }
+
+      .partner-logos {
+        grid-template-columns: 1fr;
+      }
+
+      .partner-logo {
+        min-height: 92px;
+      }
+
+      .partner-logo + .partner-logo {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 0;
+      }
+
+      .membership-grid {
+        gap: 42px;
+      }
+
+      .card-shot {
+        min-height: 360px;
+      }
+
+      .card-shot img {
+        border-radius: 22px;
+      }
+
+      .card-shot-label {
+        right: 12px;
+        bottom: 16px;
+        max-width: 190px;
+        padding: 16px 17px;
+      }
+
+      .coverage-grid {
+        gap: 44px;
+      }
+
+      .map-card {
+        min-height: 430px;
+        border-radius: 22px;
+      }
+
+      .map-card::after {
+        inset: 10px;
+        border-radius: 15px;
+      }
+
+      .map-card > img {
+        object-position: 53% center;
+      }
+
+      .map-head {
+        top: 20px;
+        right: 20px;
+        left: 20px;
+        font-size: 0.52rem;
+      }
+
+      .neighborhood-caption {
+        right: 24px;
+        bottom: 46px;
+        left: 24px;
+      }
+
+      .neighborhood-caption strong {
+        max-width: 310px;
+        font-size: 1.65rem;
+      }
+
+      .photo-credit {
+        right: 20px;
+        bottom: 16px;
       }
 
       .section-title {
@@ -1432,6 +1823,25 @@
       .modal-inner {
         padding: 38px 22px 26px;
       }
+
+      .whatsapp-float {
+        right: 16px;
+        bottom: 16px;
+        width: 58px;
+        min-height: 58px;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .whatsapp-float span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1478,28 +1888,18 @@
           </div>
         </div>
 
-        <div class="hero-visual" aria-hidden="true" data-reveal>
-          <div class="orbit"></div>
-          <span class="node node-1"></span>
-          <span class="node node-2"></span>
-          <span class="node node-3"></span>
-          <div class="network-stage">
-            <div class="network-head"><span>Ecossistema empresarial</span><span>Rede ativa</span></div>
-            <svg class="network-lines" viewBox="0 0 430 468" role="presentation">
-              <path d="M77 118 C122 126 144 172 189 210"></path>
-              <path d="M356 190 C310 186 286 202 243 222"></path>
-              <path d="M91 354 C142 326 158 284 195 251"></path>
-              <circle cx="77" cy="118" r="4"></circle>
-              <circle cx="356" cy="190" r="4"></circle>
-              <circle cx="91" cy="354" r="4"></circle>
-            </svg>
-            <div class="network-core">
-              <div><strong>CC</strong><small>ClubClass</small></div>
-            </div>
-            <div class="network-card network-card-one"><i>01</i><span>Networking</span></div>
-            <div class="network-card network-card-two"><i>02</i><span>Visibilidade</span></div>
-            <div class="network-card network-card-three"><i>03</i><span>Parcerias</span></div>
-            <div class="network-locations"><span>Jaraguá</span><b>↔</b><span>Pampulha</span></div>
+        <div class="hero-visual" data-reveal>
+          <figure class="connection-frame">
+            <img src="assets/clubclass-networking.jpg" alt="Empresários locais conversando em um encontro de networking" width="1536" height="1024" fetchpriority="high">
+            <span class="connection-badge">Comunidade em movimento</span>
+            <figcaption class="connection-caption">
+              <strong>Negócios feitos por pessoas que se conhecem.</strong>
+              <span>Relacionamento • Presença • Oportunidade</span>
+            </figcaption>
+          </figure>
+          <div class="connection-stat" aria-label="Rede empresarial local">
+            <strong>CC</strong>
+            <span>Rede empresarial local</span>
           </div>
         </div>
       </div>
@@ -1513,6 +1913,40 @@
             <span>Prestadores de serviços</span>
             <span>Parceiros da região</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="partners" aria-labelledby="partners-title">
+      <div class="container partners-row">
+        <div class="partners-copy" data-reveal>
+          <p id="partners-title">Confiança que se reconhece</p>
+          <strong>Marcas participantes e parceiras que fortalecem o ecossistema.</strong>
+        </div>
+        <div class="partner-logos" data-reveal>
+          <div class="partner-logo"><img src="assets/partner-jaragua.png" alt="Clube Jaraguá" width="342" height="118" loading="lazy"></div>
+          <div class="partner-logo"><img src="assets/partner-sicoob.png" alt="Sicoob" width="3456" height="810" loading="lazy"></div>
+          <div class="partner-logo"><img src="assets/partner-v4.webp" alt="V4 Company" width="528" height="112" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section membership" id="cartao">
+      <div class="container membership-grid">
+        <div class="card-shot" data-reveal>
+          <img src="assets/clubclass-card.jpg" alt="Cartão premium de associado ClubClass em metal preto e dourado" width="1487" height="1058" loading="lazy">
+          <div class="card-shot-label"><b>Seu acesso ClubClass</b>Uma credencial que representa pertencimento, vantagens e novas possibilidades.</div>
+        </div>
+        <div class="membership-copy" data-reveal>
+          <p class="section-label">Mais que um cartão</p>
+          <h2 class="section-title">Seu passaporte para uma rede de <span class="gold-text">boas oportunidades.</span></h2>
+          <p class="section-intro">O cartão ClubClass materializa sua presença no clube e aproxima você de benefícios, empresas e experiências exclusivas na região.</p>
+          <div class="membership-points" aria-label="Vantagens do cartão ClubClass">
+            <span class="membership-point">Identificação como empresa participante</span>
+            <span class="membership-point">Acesso a vantagens e condições exclusivas</span>
+            <span class="membership-point">Mais proximidade com negócios da região</span>
+          </div>
+          <button class="btn" type="button" data-open-lead>Quero meu cartão ClubClass</button>
         </div>
       </div>
     </section>
@@ -1592,6 +2026,34 @@
       </div>
     </section>
 
+    <section class="section coverage" id="abrangencia">
+      <div class="container coverage-grid">
+        <div class="coverage-copy" data-reveal>
+          <p class="section-label">Presença local, alcance regional</p>
+          <h2 class="section-title">O Jaraguá no centro de uma rede que <span class="gold-text">vai mais longe.</span></h2>
+          <p class="section-intro">A comunidade nasce no Jaraguá e conecta empresas de bairros estratégicos da Pampulha e região — perto o suficiente para criar relações reais, grande o bastante para multiplicar oportunidades.</p>
+          <div class="coverage-areas" aria-label="Áreas de abrangência">
+            <span>Jaraguá</span>
+            <span>Dona Clara</span>
+            <span>Liberdade</span>
+            <span>Aeroporto</span>
+            <span>São Luiz</span>
+            <span>Pampulha</span>
+          </div>
+        </div>
+
+        <div class="map-card" data-reveal>
+          <img src="assets/jaragua-bh.jpg" alt="Área de convivência do Jaraguá Country Club, no bairro Jaraguá em Belo Horizonte" width="4000" height="2666" loading="lazy">
+          <div class="map-head"><span>Jaraguá • Belo Horizonte</span><span>Presença local</span></div>
+          <div class="neighborhood-caption">
+            <span>Uma região que faz negócios</span>
+            <strong>Onde relações locais viram oportunidades reais.</strong>
+          </div>
+          <a class="photo-credit" href="https://www.jaraguaclub.com.br/" target="_blank" rel="noopener">Foto: Jaraguá Country Club</a>
+        </div>
+      </div>
+    </section>
+
     <section class="section offer" id="plano">
       <div class="container offer-grid">
         <div class="offer-copy" data-reveal>
@@ -1630,6 +2092,13 @@
       <span class="footer-copy">© <span id="current-year"></span> ClubClass</span>
     </div>
   </footer>
+
+  <a class="whatsapp-float" href="https://wa.me/?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ClubClass." target="_blank" rel="noopener" aria-label="Conversar sobre o ClubClass pelo WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M19.11 17.19c-.26-.13-1.55-.76-1.79-.85-.24-.09-.42-.13-.59.13-.17.26-.68.85-.83 1.02-.15.17-.31.2-.57.07-.26-.13-1.1-.41-2.1-1.29-.78-.69-1.3-1.54-1.45-1.81-.15-.26-.02-.4.11-.53.12-.12.26-.31.39-.46.13-.15.17-.26.26-.44.09-.17.04-.33-.02-.46-.07-.13-.59-1.42-.81-1.94-.21-.51-.43-.44-.59-.45h-.5c-.17 0-.46.07-.7.33-.24.26-.92.9-.92 2.2s.94 2.55 1.07 2.73c.13.17 1.86 2.84 4.5 3.98.63.27 1.12.43 1.5.55.63.2 1.2.17 1.66.1.51-.08 1.55-.63 1.77-1.24.22-.61.22-1.13.15-1.24-.07-.11-.24-.17-.5-.31M16.04 26.67h-.01a10.62 10.62 0 0 1-5.41-1.48l-.39-.23-4.02 1.05 1.07-3.92-.25-.4a10.6 10.6 0 1 1 9.01 4.98m9.04-19.72A12.69 12.69 0 0 0 16.05 3.2C9.05 3.2 3.36 8.89 3.36 15.89c0 2.24.59 4.43 1.7 6.35L3.25 28.8l6.72-1.76a12.67 12.67 0 0 0 6.08 1.55h.01c7 0 12.69-5.69 12.69-12.69 0-3.39-1.32-6.57-3.67-8.95"></path>
+    </svg>
+    <span>Fale com a gente</span>
+  </a>
 
   <dialog id="lead-dialog" aria-labelledby="lead-title">
     <div class="modal-inner">
