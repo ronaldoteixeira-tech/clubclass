@@ -10,13 +10,13 @@
           "allowedOrigins": "*"
         }
       },
-      "id": "1d102e34-5832-4912-9c9e-5e3650cf5821",
+      "id": "98aaad85-25f2-4dc2-b995-26e1252554ff",
       "name": "Webhook Formulário",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        220,
-        300
+        -336,
+        144
       ],
       "webhookId": "clubclass-rsvp"
     },
@@ -24,13 +24,13 @@
       "parameters": {
         "jsCode": "let raw = $input.first().json.body || $input.first().json;\n\n// Garante parse caso venha como string\nif (typeof raw === 'string') {\n  try {\n    raw = JSON.parse(raw);\n  } catch (e) {\n    raw = {};\n  }\n}\n\n// 1. Limpeza e Formatação de CNPJ\nlet cnpj = (raw.cnpj || '').toString().trim();\nconst cnpjDigits = cnpj.replace(/\\D/g, '');\nif (cnpjDigits.length === 14) {\n  cnpj = cnpjDigits.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$/, '$1.$2.$3/$4-$5');\n}\n\n// 2. Limpeza e Formatação de Telefone\nlet telefone = (raw.telefone || '').toString().trim();\nconst phoneDigits = telefone.replace(/\\D/g, '');\nif (phoneDigits.length === 11) {\n  telefone = phoneDigits.replace(/^(\\d{2})(\\d{5})(\\d{4})$/, '($1) $2-$3');\n} else if (phoneDigits.length === 10) {\n  telefone = phoneDigits.replace(/^(\\d{2})(\\d{4})(\\d{4})$/, '($1) $2-$3');\n}\n\n// 3. Data e Hora no fuso de Brasília\nconst now = new Date();\nconst dataHora = new Intl.DateTimeFormat('pt-BR', {\n  timeZone: 'America/Sao_Paulo',\n  dateStyle: 'short',\n  timeStyle: 'medium'\n}).format(now);\n\nreturn [{\n  json: {\n    dataHora: dataHora,\n    razaoSocial: (raw.razao_social || '').toString().trim(),\n    cnpj: cnpj,\n    nomeResponsavel: (raw.nome_responsavel || '').toString().trim(),\n    telefone: telefone,\n    evento: (raw.evento || 'clubclass-lancamento-2026-10-28').toString().trim(),\n    status: 'Confirmado'\n  }\n}];"
       },
-      "id": "d13264c1-23f2-4bc2-b883-8208cb13a82a",
+      "id": "d91b8c45-dd20-47b0-bafe-9bee480a0500",
       "name": "Formatar Dados",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        460,
-        300
+        -96,
+        144
       ]
     },
     {
@@ -38,13 +38,15 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "mode": "list",
-          "value": ""
+          "value": "https://docs.google.com/spreadsheets/d/16mTQ1lynWF3od8HotLG5ubOg5eZ8N5oc7o1gLLq6d48/edit?gid=0#gid=0",
+          "mode": "url"
         },
         "sheetName": {
           "__rl": true,
+          "value": "gid=0",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16mTQ1lynWF3od8HotLG5ubOg5eZ8N5oc7o1gLLq6d48/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -58,18 +60,97 @@
             "Status": "={{ $json.status }}"
           },
           "matchingColumns": [],
-          "schema": []
+          "schema": [
+            {
+              "id": "Data/Hora",
+              "displayName": "Data/Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Razão Social",
+              "displayName": "Razão Social",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CNPJ",
+              "displayName": "CNPJ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome do Responsável",
+              "displayName": "Nome do Responsável",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Evento",
+              "displayName": "Evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "id": "e95fb7ab-65ab-4dbf-a36c-92b0c360dbb3",
+      "id": "ccbc4008-42d4-4c71-8404-a783e00a54cd",
       "name": "Salvar no Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        700,
-        300
-      ]
+        144,
+        144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ll6JS5CvdXwc7fig",
+          "name": "Lisboa.Co - Sheets"
+        }
+      }
     },
     {
       "parameters": {
@@ -91,17 +172,16 @@
           }
         }
       },
-      "id": "fb1249cd-73e4-411a-9657-3a10e74e64f8",
+      "id": "c23da707-ba92-4e2b-ae02-3aba93eb4068",
       "name": "Responder ao Site",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        940,
-        300
+        384,
+        144
       ]
     }
   ],
-  "pinData": {},
   "connections": {
     "Webhook Formulário": {
       "main": [
@@ -137,9 +217,9 @@
       ]
     }
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "versionId": "clubclass-n8n-v1"
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d946570092a86d9c7ad06bd1a4d02c366559a0792b5dca95ecb6b7fe9120c6c"
+  }
 }
