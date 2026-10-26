@@ -1,0 +1,145 @@
+{
+  "name": "ClubClass - Formulário Sicoob para Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clubclass-rsvp",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "1d102e34-5832-4912-9c9e-5e3650cf5821",
+      "name": "Webhook Formulário",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "clubclass-rsvp"
+    },
+    {
+      "parameters": {
+        "jsCode": "let raw = $input.first().json.body || $input.first().json;\n\n// Garante parse caso venha como string\nif (typeof raw === 'string') {\n  try {\n    raw = JSON.parse(raw);\n  } catch (e) {\n    raw = {};\n  }\n}\n\n// 1. Limpeza e Formatação de CNPJ\nlet cnpj = (raw.cnpj || '').toString().trim();\nconst cnpjDigits = cnpj.replace(/\\D/g, '');\nif (cnpjDigits.length === 14) {\n  cnpj = cnpjDigits.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$/, '$1.$2.$3/$4-$5');\n}\n\n// 2. Limpeza e Formatação de Telefone\nlet telefone = (raw.telefone || '').toString().trim();\nconst phoneDigits = telefone.replace(/\\D/g, '');\nif (phoneDigits.length === 11) {\n  telefone = phoneDigits.replace(/^(\\d{2})(\\d{5})(\\d{4})$/, '($1) $2-$3');\n} else if (phoneDigits.length === 10) {\n  telefone = phoneDigits.replace(/^(\\d{2})(\\d{4})(\\d{4})$/, '($1) $2-$3');\n}\n\n// 3. Data e Hora no fuso de Brasília\nconst now = new Date();\nconst dataHora = new Intl.DateTimeFormat('pt-BR', {\n  timeZone: 'America/Sao_Paulo',\n  dateStyle: 'short',\n  timeStyle: 'medium'\n}).format(now);\n\nreturn [{\n  json: {\n    dataHora: dataHora,\n    razaoSocial: (raw.razao_social || '').toString().trim(),\n    cnpj: cnpj,\n    nomeResponsavel: (raw.nome_responsavel || '').toString().trim(),\n    telefone: telefone,\n    evento: (raw.evento || 'clubclass-lancamento-2026-10-28').toString().trim(),\n    status: 'Confirmado'\n  }\n}];"
+      },
+      "id": "d13264c1-23f2-4bc2-b883-8208cb13a82a",
+      "name": "Formatar Dados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data/Hora": "={{ $json.dataHora }}",
+            "Razão Social": "={{ $json.razaoSocial }}",
+            "CNPJ": "={{ $json.cnpj }}",
+            "Nome do Responsável": "={{ $json.nomeResponsavel }}",
+            "Telefone": "={{ $json.telefone }}",
+            "Evento": "={{ $json.evento }}",
+            "Status": "={{ $json.status }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "e95fb7ab-65ab-4dbf-a36c-92b0c360dbb3",
+      "name": "Salvar no Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"status\": \"confirmed\",\n  \"message\": \"Cadastro registrado com sucesso!\"\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "fb1249cd-73e4-411a-9657-3a10e74e64f8",
+      "name": "Responder ao Site",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Formulário": {
+      "main": [
+        [
+          {
+            "node": "Formatar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Dados": {
+      "main": [
+        [
+          {
+            "node": "Salvar no Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar no Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Responder ao Site",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "clubclass-n8n-v1"
+}

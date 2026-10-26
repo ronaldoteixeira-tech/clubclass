@@ -155,12 +155,12 @@
 <footer class="footer"><div class="wrap footer-inner"><div class="footer-brand"><strong>CLUBCLASS</strong><span>Conexões que movimentam negócios.</span></div><a href="#convite">Voltar ao início ↑</a></div></footer>
 <script>
 /* CONFIGURAÇÃO DA OPERAÇÃO:
-   Para enviar os cadastros para o Google Sheets:
-   1. Siga o passo a passo em 'COMO_CONFIGURAR_PLANILHA.md'
-   2. Cole a URL do Webhook gerada no campo 'endpoint' abaixo
-   Resposta esperada do servidor: JSON {"success":true,"status":"confirmed"}. */
+   Para conectar o n8n e enviar os cadastros para o Google Sheets:
+   1. Siga o passo a passo em 'COMO_CONFIGURAR_N8N.md'
+   2. Cole a URL de Produção do Webhook do seu n8n no campo 'endpoint' abaixo
+   Resposta esperada do webhook: JSON {"success":true,"status":"confirmed"}. */
 window.CLUBCLASS_CONFIG = Object.assign({
-  endpoint: '', // Cole aqui a URL do seu App da Web do Google Sheets (/exec)
+  endpoint: '', // Cole aqui a URL do Webhook do n8n (ex: https://seu-n8n.com/webhook/clubclass-rsvp)
   privacyNoticeApproved: true,
   approvalRequired: false
 }, window.CLUBCLASS_CONFIG || {});
@@ -225,7 +225,7 @@ window.CLUBCLASS_CONFIG = Object.assign({
     if (submitting || !validFields()) return;
     message.hidden = true;
     if (!config.endpoint || !config.endpoint.trim()) {
-      announce('O webhook da planilha ainda não foi configurado. Siga o guia em COMO_CONFIGURAR_PLANILHA.md para adicionar a URL do Google Sheets.', true);
+      announce('O webhook do n8n ainda não foi configurado. Siga o guia em COMO_CONFIGURAR_N8N.md para adicionar a URL do webhook.', true);
       return;
     }
     let endpoint;
