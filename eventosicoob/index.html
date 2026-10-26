@@ -155,12 +155,9 @@
 <footer class="footer"><div class="wrap footer-inner"><div class="footer-brand"><strong>CLUBCLASS</strong><span>Conexões que movimentam negócios.</span></div><a href="#convite">Voltar ao início ↑</a></div></footer>
 <script>
 /* CONFIGURAÇÃO DA OPERAÇÃO:
-   Para conectar o n8n e enviar os cadastros para o Google Sheets:
-   1. Siga o passo a passo em 'COMO_CONFIGURAR_N8N.md'
-   2. Cole a URL de Produção do Webhook do seu n8n no campo 'endpoint' abaixo
-   Resposta esperada do webhook: JSON {"success":true,"status":"confirmed"}. */
+   Webhook de Produção do n8n conectado para registrar presenças no Google Sheets. */
 window.CLUBCLASS_CONFIG = Object.assign({
-  endpoint: '', // Cole aqui a URL do Webhook do n8n (ex: https://seu-n8n.com/webhook/clubclass-rsvp)
+  endpoint: 'https://n8n.v4lisboatech.com.br/webhook/clubclass-rsvp',
   privacyNoticeApproved: true,
   approvalRequired: false
 }, window.CLUBCLASS_CONFIG || {});
@@ -249,18 +246,26 @@ window.CLUBCLASS_CONFIG = Object.assign({
         telefone: digits(phone.value),
         evento: 'clubclass-lancamento-2026-10-28'
       };
-      // Envia como text/plain com corpo JSON para evitar bloqueio de CORS (OPTIONS preflight) no Google Apps Script
       const response = await fetch(endpoint.href, {
         method: 'POST',
-        headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(payload),
         signal: controller.signal,
         credentials: 'omit',
         cache: 'no-store'
       });
-      const result = await response.json();
-      const isConfirmed = result && (result.success === true || result.status === 'confirmed' || result.status === 'success' || result.ok === true);
-      if (!response.ok || !isConfirmed) throw new Error(result.error || 'Registro não confirmado pelo servidor.');
+      const result = await response.json().catch(() => ({}));
+      const isConfirmed = response.ok && (
+        result.success === true ||
+        result.status === 'confirmed' ||
+        result.status === 'success' ||
+        result.ok === true ||
+        (result.message && /workflow|registrado|sucesso|recebido/i.test(result.message))
+      );
+      if (!isConfirmed) throw new Error((result && (result.error || result.message)) || 'Registro não confirmado pelo servidor.');
       const pending = config.approvalRequired || (result && result.status === 'pending');
       if (pending) {
         document.getElementById('success-title').textContent = 'Recebemos seu cadastro!';
@@ -273,7 +278,7 @@ window.CLUBCLASS_CONFIG = Object.assign({
       success.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest'});
       form.reset();
     } catch (error) {
-      announce('Não foi possível confirmar o recebimento do cadastro. Verifique a conexão e se o webhook do Google Sheets está ativo.', true);
+      announce('Não foi possível confirmar o recebimento do cadastro. Verifique a conexão e tente novamente.', true);
     } finally {
       clearTimeout(timer); submitting = false; submit.disabled = false;
       label.textContent = 'Confirmar minha presença'; form.removeAttribute('aria-busy');
