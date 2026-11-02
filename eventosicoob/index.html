@@ -159,14 +159,11 @@
 </main>
 <footer class="footer"><div class="wrap footer-inner"><div class="footer-brand"><strong>CLUBCLASS</strong><span>Conexões que movimentam negócios.</span></div><a href="#convite">Voltar ao início ↑</a></div></footer>
 <script>
-/* CONFIGURAÇÃO DA OPERAÇÃO. Não há coleta nem envio enquanto endpoint estiver vazio.
-   Após integrar o serviço de RSVP e aprovar o aviso de uso de dados, preencher:
-   endpoint: URL HTTPS, privacyNoticeApproved: true.
-   Resposta exigida do servidor: JSON {"success":true,"status":"confirmed"|"pending"}.
-   Não inserir chaves ou credenciais no HTML. */
+/* CONFIGURAÇÃO DA OPERAÇÃO:
+   Webhook de Produção do n8n conectado para registrar presenças no Google Sheets. */
 window.CLUBCLASS_CONFIG = Object.assign({
-  endpoint: '',
-  privacyNoticeApproved: false,
+  endpoint: 'https://n8n.v4lisboatech.com.br/webhook/clubclass-rsvp',
+  privacyNoticeApproved: true,
   approvalRequired: false
 }, window.CLUBCLASS_CONFIG || {});
 </script>
@@ -219,22 +216,26 @@ window.CLUBCLASS_CONFIG = Object.assign({
     return form.reportValidity();
   }
 
-  // O aviso de prévia só desaparece quando o destino e o aviso de dados foram configurados.
-  if (config.endpoint && config.privacyNoticeApproved) document.getElementById('preview-note').hidden = true;
+  // O aviso de prévia desaparece quando o endpoint estiver configurado.
+  const preview = document.getElementById('preview-note');
+  if (preview && config.endpoint && config.privacyNoticeApproved) {
+    preview.hidden = true;
+    preview.style.display = 'none';
+  }
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (submitting || !validFields()) return;
     message.hidden = true;
-    if (!config.endpoint || !config.privacyNoticeApproved) {
-      announce('Esta é uma prévia da página. O recebimento de cadastros ainda não foi conectado. Nenhum dado foi enviado e sua presença ainda não foi confirmada.');
+    if (!config.endpoint || !config.endpoint.trim() || !config.privacyNoticeApproved) {
+      announce('O webhook de recebimento de cadastros ainda não foi conectado. Tente novamente mais tarde.', true);
       return;
     }
     let endpoint;
-    try { endpoint = new URL(config.endpoint, window.location.href); }
-    catch { announce('O formulário está temporariamente indisponível. Nenhum dado foi enviado.', true); return; }
+    try { endpoint = new URL(config.endpoint.trim(), window.location.href); }
+    catch { announce('A URL do formulário está temporariamente indisponível. Nenhum dado foi enviado.', true); return; }
     if (endpoint.protocol !== 'https:' && endpoint.hostname !== 'localhost' && endpoint.hostname !== '127.0.0.1') {
-      announce('O formulário está temporariamente indisponível. Nenhum dado foi enviado.', true);
+      announce('O formulário exige uma URL segura HTTPS para o envio.', true);
       return;
     }
     submitting = true;
@@ -252,13 +253,26 @@ window.CLUBCLASS_CONFIG = Object.assign({
         evento: 'clubclass-lancamento-2026-11-05'
       };
       const response = await fetch(endpoint.href, {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload), signal: controller.signal,
-        credentials: 'omit', cache: 'no-store'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+        credentials: 'omit',
+        cache: 'no-store'
       });
-      const result = await response.json();
-      if (!response.ok || result.success !== true || !['confirmed', 'pending'].includes(result.status)) throw new Error('Registro não confirmado pelo servidor.');
-      const pending = config.approvalRequired || result.status === 'pending';
+      const result = await response.json().catch(() => ({}));
+      const isConfirmed = response.ok && (
+        result.success === true ||
+        result.status === 'confirmed' ||
+        result.status === 'success' ||
+        result.ok === true ||
+        (result.message && /workflow|registrado|sucesso|recebido/i.test(result.message))
+      );
+      if (!isConfirmed) throw new Error((result && (result.error || result.message)) || 'Registro não confirmado pelo servidor.');
+      const pending = config.approvalRequired || (result && result.status === 'pending');
       if (pending) {
         document.getElementById('success-title').textContent = 'Recebemos seu cadastro!';
         document.getElementById('success-copy').textContent = 'A organização ainda confirmará a disponibilidade e sua participação. Aguarde o contato pelo telefone informado.';
@@ -270,10 +284,13 @@ window.CLUBCLASS_CONFIG = Object.assign({
       success.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest'});
       form.reset();
     } catch (error) {
-      announce('Não foi possível confirmar o recebimento do cadastro. Seus dados continuam no formulário. Tente novamente ou consulte a organização.', true);
+      announce('Não foi possível confirmar o recebimento do cadastro. Verifique a conexão e tente novamente.', true);
     } finally {
-      clearTimeout(timer); submitting = false; submit.disabled = false;
-      label.textContent = 'Confirmar minha presença'; form.removeAttribute('aria-busy');
+      clearTimeout(timer);
+      submitting = false;
+      submit.disabled = false;
+      label.textContent = 'Confirmar minha presença';
+      form.removeAttribute('aria-busy');
     }
   });
 

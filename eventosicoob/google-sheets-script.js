@@ -67,7 +67,7 @@ function doPost(e) {
     var cnpj = (data.cnpj || "").toString().trim();
     var nomeResponsavel = (data.nome_responsavel || "").toString().trim();
     var telefone = (data.telefone || "").toString().trim();
-    var evento = (data.evento || "clubclass-lancamento-2026-10-28").toString().trim();
+    var evento = (data.evento || "clubclass-lancamento-2026-11-05").toString().trim();
 
     // Formata o CNPJ se vier só em números
     if (cnpj.length === 14 && /^\d+$/.test(cnpj)) {
