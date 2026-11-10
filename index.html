@@ -1597,6 +1597,20 @@
       text-align: center;
     }
 
+    .form-error {
+      margin: 8px 0 0;
+      color: #e0453d;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .lead-form .btn:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
+    }
+
     .form-success {
       display: none;
       min-height: 330px;
@@ -2427,13 +2441,14 @@
                   </select>
                 </div>
               </div>
-              <button class="btn btn-dark" type="submit">Quero fazer parte do ClubClass</button>
+              <button class="btn btn-dark" id="submit-btn" type="submit">Quero fazer parte do ClubClass</button>
               <p class="form-note">Seus dados serão usados apenas para contato sobre o ClubClass.</p>
+              <div id="form-error" class="form-error" role="alert" style="display:none;"></div>
             </form>
 
             <div class="conversion-direct">
               <span>Prefere falar diretamente com nosso time?</span>
-              <a class="whatsapp-inline" href="https://wa.me/?text=Ol%C3%A1%2C%20quero%20fazer%20parte%20do%20ClubClass." target="_blank" rel="noopener">Falar pelo WhatsApp</a>
+              <a class="whatsapp-inline" href="https://wa.me/553191757825?text=Ol%C3%A1%2C%20quero%20fazer%20parte%20do%20ClubClass." target="_blank" rel="noopener">Falar pelo WhatsApp</a>
             </div>
           </div>
 
@@ -2459,7 +2474,7 @@
     </div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ClubClass." target="_blank" rel="noopener" aria-label="Conversar sobre o ClubClass pelo WhatsApp">
+  <a class="whatsapp-float" href="https://wa.me/553191757825?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ClubClass." target="_blank" rel="noopener" aria-label="Conversar sobre o ClubClass pelo WhatsApp">
     <svg viewBox="0 0 32 32" aria-hidden="true">
       <path d="M19.11 17.19c-.26-.13-1.55-.76-1.79-.85-.24-.09-.42-.13-.59.13-.17.26-.68.85-.83 1.02-.15.17-.31.2-.57.07-.26-.13-1.1-.41-2.1-1.29-.78-.69-1.3-1.54-1.45-1.81-.15-.26-.02-.4.11-.53.12-.12.26-.31.39-.46.13-.15.17-.26.26-.44.09-.17.04-.33-.02-.46-.07-.13-.59-1.42-.81-1.94-.21-.51-.43-.44-.59-.45h-.5c-.17 0-.46.07-.7.33-.24.26-.92.9-.92 2.2s.94 2.55 1.07 2.73c.13.17 1.86 2.84 4.5 3.98.63.27 1.12.43 1.5.55.63.2 1.2.17 1.66.1.51-.08 1.55-.63 1.77-1.24.22-.61.22-1.13.15-1.24-.07-.11-.24-.17-.5-.31M16.04 26.67h-.01a10.62 10.62 0 0 1-5.41-1.48l-.39-.23-4.02 1.05 1.07-3.92-.25-.4a10.6 10.6 0 1 1 9.01 4.98m9.04-19.72A12.69 12.69 0 0 0 16.05 3.2C9.05 3.2 3.36 8.89 3.36 15.89c0 2.24.59 4.43 1.7 6.35L3.25 28.8l6.72-1.76a12.67 12.67 0 0 0 6.08 1.55h.01c7 0 12.69-5.69 12.69-12.69 0-3.39-1.32-6.57-3.67-8.95"></path>
     </svg>
@@ -2471,6 +2486,13 @@
     const formContent = document.querySelector('#form-content');
     const success = document.querySelector('#form-success');
     const interest = document.querySelector('#interest');
+    const submitBtn = document.querySelector('#submit-btn') || form.querySelector('button[type="submit"]');
+    const errorEl = document.querySelector('#form-error');
+    const nameInput = document.querySelector('#name');
+    const companyInput = document.querySelector('#company');
+    const segmentInput = document.querySelector('#segment');
+    const whatsappInput = document.querySelector('#whatsapp');
+    const emailInput = document.querySelector('#email');
 
     document.querySelector('#current-year').textContent = new Date().getFullYear();
 
@@ -2480,11 +2502,111 @@
       });
     });
 
-    form.addEventListener('submit', (event) => {
+    const digits = (v) => (v || '').replace(/\D/g, '');
+    function maskPhone(value) {
+      let s = digits(value);
+      if (s.length > 11 && s.startsWith('55')) s = s.slice(2);
+      s = s.slice(0, 11);
+      if (!s.length) return '';
+      if (s.length <= 2) return '(' + s;
+      const split = s.length > 10 ? 7 : 6;
+      return '(' + s.slice(0, 2) + ') ' + s.slice(2, split) + (s.length > split ? '-' + s.slice(split) : '');
+    }
+    if (whatsappInput) {
+      whatsappInput.addEventListener('input', () => {
+        whatsappInput.setCustomValidity('');
+        whatsappInput.value = maskPhone(whatsappInput.value);
+      });
+    }
+
+    const WEBHOOK_URL = 'https://n8n.v4lisboatech.com.br/webhook/clubclass-01';
+    let isSubmitting = false;
+
+    function showError(msg) {
+      if (!errorEl) return;
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+
+    function clearError() {
+      if (!errorEl) return;
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+
+    [nameInput, companyInput, segmentInput, whatsappInput, emailInput, interest].forEach((el) => {
+      if (el) el.addEventListener('input', clearError);
+    });
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      formContent.hidden = true;
-      success.classList.add('is-visible');
-      form.reset();
+      if (isSubmitting) return;
+      clearError();
+
+      const phoneDigits = digits(whatsappInput.value);
+      if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+        showError('Por favor, informe um WhatsApp válido com DDD.');
+        whatsappInput.focus();
+        return;
+      }
+
+      isSubmitting = true;
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando…';
+
+      const payload = {
+        nome: nameInput.value.trim(),
+        empresa: companyInput.value.trim(),
+        segmento: segmentInput.value.trim(),
+        whatsapp: whatsappInput.value.trim(),
+        whatsapp_numeros: phoneDigits,
+        email: emailInput.value.trim(),
+        plano: interest.value.trim(),
+        origem: 'lp-principal'
+      };
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+          credentials: 'omit',
+          cache: 'no-store'
+        });
+
+        const result = await response.json().catch(() => ({}));
+        const isConfirmed = response.ok && (
+          result.success === true ||
+          result.status === 'confirmed' ||
+          result.status === 'success' ||
+          result.ok === true ||
+          (result.message && /workflow|registrado|sucesso|recebido/i.test(result.message))
+        );
+
+        if (!isConfirmed) {
+          throw new Error((result && (result.error || result.message)) || 'Registro não confirmado pelo servidor.');
+        }
+
+        formContent.hidden = true;
+        success.classList.add('is-visible');
+        form.reset();
+        success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (err) {
+        showError('Não foi possível enviar seus dados no momento. Por favor, tente novamente ou fale conosco pelo WhatsApp.');
+      } finally {
+        clearTimeout(timeoutId);
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
     });
 
     const revealItems = document.querySelectorAll('[data-reveal]');
