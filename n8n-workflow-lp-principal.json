@@ -22,7 +22,7 @@
     },
     {
       "parameters": {
-        "jsCode": "let raw = $input.first().json.body || $input.first().json;\n\n// Garante parse caso venha como string\nif (typeof raw === 'string') {\n  try {\n    raw = JSON.parse(raw);\n  } catch (e) {\n    raw = {};\n  }\n}\n\n// 1. Limpeza e Formatação de Telefone / WhatsApp\nlet whatsapp = (raw.whatsapp || raw.telefone || '').toString().trim();\nlet phoneDigits = whatsapp.replace(/\\D/g, '');\nif (phoneDigits.length > 11 && phoneDigits.startsWith('55')) {\n  phoneDigits = phoneDigits.slice(2);\n}\nif (phoneDigits.length === 11) {\n  whatsapp = phoneDigits.replace(/^(\\d{2})(\\d{5})(\\d{4})$/, '($1) $2-$3');\n} else if (phoneDigits.length === 10) {\n  whatsapp = phoneDigits.replace(/^(\\d{2})(\\d{4})(\\d{4})$/, '($1) $2-$3');\n}\n\n// 2. Data e Hora no fuso de Brasília\nconst now = new Date();\nconst dataHora = new Intl.DateTimeFormat('pt-BR', {\n  timeZone: 'America/Sao_Paulo',\n  dateStyle: 'short',\n  timeStyle: 'medium'\n}).format(now);\n\nreturn [{\n  json: {\n    dataHora: dataHora,\n    nome: (raw.nome || raw.name || '').toString().trim(),\n    empresa: (raw.empresa || raw.company || '').toString().trim(),\n    segmento: (raw.segmento || raw.segment || '').toString().trim(),\n    whatsapp: whatsapp,\n    email: (raw.email || '').toString().trim(),\n    plano: (raw.plano || raw.interest || '').toString().trim(),\n    origem: (raw.origem || 'lp-principal').toString().trim(),\n    status: 'Novo Lead'\n  }\n}];"
+        "jsCode": "let raw = $input.first().json.body || $input.first().json;\n\n// Garante parse caso venha como string\nif (typeof raw === 'string') {\n  try {\n    raw = JSON.parse(raw);\n  } catch (e) {\n    raw = {};\n  }\n}\n\n// 1. Limpeza e Formatação de Telefone / WhatsApp\nlet whatsapp = (raw.whatsapp || raw.telefone || '').toString().trim();\nlet phoneDigits = whatsapp.replace(/\\D/g, '');\nif (phoneDigits.length > 11 && phoneDigits.startsWith('55')) {\n  phoneDigits = phoneDigits.slice(2);\n}\nif (phoneDigits.length === 11) {\n  whatsapp = phoneDigits.replace(/^(\\d{2})(\\d{5})(\\d{4})$/, '($1) $2-$3');\n} else if (phoneDigits.length === 10) {\n  whatsapp = phoneDigits.replace(/^(\\d{2})(\\d{4})(\\d{4})$/, '($1) $2-$3');\n}\n\n// 2. CNPJ (aceita numérico e alfanumérico) no formato 00.000.000/0000-00\nconst cnpjRaw = (raw.cnpj || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 14);\nconst cnpj = cnpjRaw.length === 14\n  ? cnpjRaw.replace(/^(.{2})(.{3})(.{3})(.{4})(.{2})$/, '$1.$2.$3/$4-$5')\n  : (raw.cnpj || '').toString().trim();\n\n// 3. Data e Hora no fuso de Brasília\nconst now = new Date();\nconst dataHora = new Intl.DateTimeFormat('pt-BR', {\n  timeZone: 'America/Sao_Paulo',\n  dateStyle: 'short',\n  timeStyle: 'medium'\n}).format(now);\n\nreturn [{\n  json: {\n    dataHora: dataHora,\n    nome: (raw.nome || raw.name || '').toString().trim(),\n    empresa: (raw.empresa || raw.company || '').toString().trim(),\n    cnpj: cnpj,\n    segmento: (raw.segmento || raw.segment || '').toString().trim(),\n    whatsapp: whatsapp,\n    email: (raw.email || '').toString().trim(),\n    plano: (raw.plano || raw.interest || '').toString().trim(),\n    origem: (raw.origem || 'lp-principal').toString().trim(),\n    status: 'Novo Lead'\n  }\n}];"
       },
       "id": "81975c3f-2c09-49b5-ba60-f3ca07437f0a",
       "name": "Formatar Dados",
@@ -54,6 +54,7 @@
             "Data/Hora": "={{ $json.dataHora }}",
             "Nome": "={{ $json.nome }}",
             "Empresa": "={{ $json.empresa }}",
+            "CNPJ": "={{ $json.cnpj }}",
             "Segmento": "={{ $json.segmento }}",
             "WhatsApp": "={{ $json.whatsapp }}",
             "E-mail": "={{ $json.email }}",
@@ -86,6 +87,16 @@
             {
               "id": "Empresa",
               "displayName": "Empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CNPJ",
+              "displayName": "CNPJ",
               "required": false,
               "defaultMatch": false,
               "display": true,
